@@ -105,10 +105,6 @@ To enable automatic ruby linting and terraform formatting on every `git commit` 
 
 ## CI/CD
 
-CircleCI is used to run all tests and scans as part of pull requests.
-
-Security scans are also run on a daily schedule.
-
 GitHub actions are used to run all tests and scans as part of pull requests.
 
 Security scans are also run on a scheduled basis. Weekly for static code scans, and daily for dependency scans.
@@ -119,21 +115,6 @@ Each environment has dependencies on a PostgreSQL RDS instance managed by cloud.
 See [cloud.gov docs](https://cloud.gov/docs/services/relational-database/) for information on RDS.
 
 #### Staging
-
-Deploys to staging, including applying changes in terraform, happen
-on every push to the `main` branch in GitHub.
-
-The following secrets must be set within [CircleCI Environment Variables](https://circleci.com/docs/2.0/env-vars/)
-to enable a deploy to work:
-
-| Secret Name | Description |
-| ----------- | ----------- |
-| `CF_STAGING_USERNAME` | cloud.gov SpaceDeployer username |
-| `CF_STAGING_PASSWORD` | cloud.gov SpaceDeployer password |
-| `RAILS_MASTER_KEY` | `config/master.key` |
-| `AWS_ACCESS_KEY_ID` | Access key for terraform state bucket |
-| `AWS_SECRET_ACCESS_KEY` | Secret key for terraform state bucket |
-
 
 Deploys to staging, including applying changes in terraform, happen
 on every push to the `main` branch in GitHub.
@@ -149,24 +130,7 @@ to enable a deploy to work:
 | `TERRAFORM_STATE_ACCESS_KEY` | Access key for terraform state bucket |
 | `TERRAFORM_STATE_SECRET_ACCESS_KEY` | Secret key for terraform state bucket |
 
-
-
 #### Production
-
-Deploys to production, including applying changes in terraform, happen
-on every push to the `production` branch in GitHub.
-
-The following secrets must be set within [CircleCI Environment Variables](https://circleci.com/docs/2.0/env-vars/)
-to enable a deploy to work:
-
-| Secret Name | Description |
-| ----------- | ----------- |
-| `CF_PRODUCTION_USERNAME` | cloud.gov SpaceDeployer username |
-| `CF_PRODUCTION_PASSWORD` | cloud.gov SpaceDeployer password |
-| `PRODUCTION_RAILS_MASTER_KEY` | `config/credentials/production.key` |
-| `AWS_ACCESS_KEY_ID` | Access key for terraform state bucket |
-| `AWS_SECRET_ACCESS_KEY` | Secret key for terraform state bucket |
-
 
 Deploys to production, including applying changes in terraform, happen
 on every push to the `production` branch in GitHub.
@@ -182,8 +146,6 @@ to enable a deploy to work:
 | `TERRAFORM_STATE_ACCESS_KEY` | Access key for terraform state bucket |
 | `TERRAFORM_STATE_SECRET_ACCESS_KEY` | Secret key for terraform state bucket |
 
-
-
 ### Configuring ENV variables in cloud.gov
 
 All configuration that needs to be added to the deployed application's ENV should be added to
@@ -194,9 +156,6 @@ Items that are both **public** and **consistent** across staging and production 
 Otherwise, they are set as a `((variable))` within `manifest.yml` and the variable is defined depending on sensitivity:
 
 #### Credentials and other Secrets
-
-1. Store variables that must be secret using [CircleCI Environment Variables](https://circleci.com/docs/2.0/env-vars/)
-1. Add the appropriate `--var` addition to the `cf push` line on the deploy job
 
 1. Store variables that must be secret using [GitHub Environment Secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-an-environment)
 1. Add the appropriate `--var` addition to the `cf_command` line on the deploy action like the existing `rails_master_key`
