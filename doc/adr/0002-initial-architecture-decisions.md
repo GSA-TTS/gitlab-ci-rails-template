@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-We need to choose the initial language and framework for the rails_template_ci_test application.
+We need to choose the initial language and framework for the rtci application.
 
 ## Decision
 

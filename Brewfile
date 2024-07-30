@@ -15,3 +15,9 @@ brew "adr-tools"
 
 # chromedriver for integration tests
 cask "chromedriver"
+
+# used by rails-erd documentation tool
+brew "graphviz"
+
+# queue for sidekiq jobs
+brew "redis"

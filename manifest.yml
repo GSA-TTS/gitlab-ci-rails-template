@@ -1,6 +1,6 @@
 ---
 applications:
-- name: rails_template_ci_test-((env))
+- name: rtci-((env))
   buildpacks:
     - nodejs_buildpack
     - ruby_buildpack
@@ -9,10 +9,16 @@ applications:
     RAILS_ENV: ((env))
     RAILS_LOG_TO_STDOUT: true
     RAILS_SERVE_STATIC_FILES: true
+    NEW_RELIC_LOG: stdout
   processes:
+  - type: worker
+    instances: ((worker_instances))
+    memory: ((worker_memory))
+    command: bundle exec sidekiq
   - type: web
     instances: ((web_instances))
     memory: ((web_memory))
     command: bundle exec rake cf:on_first_instance db:migrate && bundle exec rails s -b 0.0.0.0 -p $PORT -e $RAILS_ENV
   services:
-  - rails_template_ci_test-rds-((env))
+  - rtci-redis-((env))
+  - rtci-rds-((env))

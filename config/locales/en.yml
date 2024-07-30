@@ -1,31 +1,26 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
+---
 en:
-  hello: "Hello world"
+  shared:
+    banner:
+      gov_description_html: A <strong>.gov</strong> website belongs to an official government organization in the United States.
+      gov_heading: Official websites use .gov
+      how: Here’s how you know
+      lock: Lock
+      locked_padlock: A locked padlock
+      official_site: An official website of the United States government
+      secure_description_html: A <strong>lock</strong> (%{lock_icon}) or <strong>https://</strong> means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.
+      secure_heading: Secure .gov websites use HTTPS
+      us_flag: U.S. Flag
+    header:
+      close: Close
+      demo_banner: TEST SITE - Do not use real personal information (demo purposes only) - TEST SITE
+      menu: Menu
+      primary: Primary navigation
+      title: Rtci
+    languages:
+      en: English
+      es: Español
+      fr: Français
+      selector: Languages
+      zh: 中文
+    skip_link: Skip to main content

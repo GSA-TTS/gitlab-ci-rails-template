@@ -16,7 +16,7 @@ jobs:
           --health-retries 5
         ports: ["5432:5432"]
         env:
-          POSTGRES_DB: continuous_monitoring_test
+          POSTGRES_DB: rtci_test
           POSTGRES_USER: cidbuser
           POSTGRES_PASSWORD: postgres
 
@@ -31,11 +31,4 @@ jobs:
       - name: Run rspec
         env:
           DATABASE_URL: ${{ steps.setup.outputs.database_url }}
-          rspec_oscal_output: tmp
         run: bundle exec rspec
-
-      - name: Save assessment results
-        uses: actions/upload-artifact@v4
-        with:
-          name: continuous_monitoring_assessment
-          path: tmp/oscal

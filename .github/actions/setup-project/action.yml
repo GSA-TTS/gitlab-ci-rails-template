@@ -8,7 +8,7 @@ inputs:
   database_url:
     description: DATABASE_URL to set
     required: false
-    default: postgres://cidbuser:postgres@localhost:5432/continuous_monitoring_test
+    default: postgres://cidbuser:postgres@localhost:5432/rtci_test
 outputs:
   database_url:
     value: ${{ inputs.database_url }}

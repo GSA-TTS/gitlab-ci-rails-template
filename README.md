@@ -1,4 +1,4 @@
-Rails Template Ci Test
+Rtci
 ========================
 
 <<TKTK: quick summary of project>>
@@ -13,6 +13,7 @@ guide for an introduction to the framework.
 * Install Ruby 3.3.4
 * Install NodeJS 20.15.1
 * Install homebrew dependencies: `brew bundle`
+  * [redis](https://redis.io/)
   * [PostgreSQL](https://www.postgresql.org/)
   * [Dockerize](https://github.com/jwilder/dockerize)
   * [jq](https://stedolan.github.io/jq/)
@@ -99,11 +100,18 @@ Run everything: `bundle exec rake`
 
 When new pages are added to the application, ensure they are added to `./pa11y.js` so that they can be scanned.
 
-### Automatic linting
-
-To enable automatic ruby linting on every `git commit` follow the instructions at the top of `.githooks/pre-commit`
+### Automatic linting and terraform formatting
+To enable automatic ruby linting and terraform formatting on every `git commit` follow the instructions at the top of `.githooks/pre-commit`
 
 ## CI/CD
+
+CircleCI is used to run all tests and scans as part of pull requests.
+
+Security scans are also run on a daily schedule.
+
+GitHub actions are used to run all tests and scans as part of pull requests.
+
+Security scans are also run on a scheduled basis. Weekly for static code scans, and daily for dependency scans.
 
 ### Deployment
 
@@ -112,8 +120,68 @@ See [cloud.gov docs](https://cloud.gov/docs/services/relational-database/) for i
 
 #### Staging
 
+Deploys to staging, including applying changes in terraform, happen
+on every push to the `main` branch in GitHub.
+
+The following secrets must be set within [CircleCI Environment Variables](https://circleci.com/docs/2.0/env-vars/)
+to enable a deploy to work:
+
+| Secret Name | Description |
+| ----------- | ----------- |
+| `CF_STAGING_USERNAME` | cloud.gov SpaceDeployer username |
+| `CF_STAGING_PASSWORD` | cloud.gov SpaceDeployer password |
+| `RAILS_MASTER_KEY` | `config/master.key` |
+| `AWS_ACCESS_KEY_ID` | Access key for terraform state bucket |
+| `AWS_SECRET_ACCESS_KEY` | Secret key for terraform state bucket |
+
+
+Deploys to staging, including applying changes in terraform, happen
+on every push to the `main` branch in GitHub.
+
+The following secrets must be set within the `staging` [environment secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-an-environment)
+to enable a deploy to work:
+
+| Secret Name | Description |
+| ----------- | ----------- |
+| `CF_USERNAME` | cloud.gov SpaceDeployer username |
+| `CF_PASSWORD` | cloud.gov SpaceDeployer password |
+| `RAILS_MASTER_KEY` | `config/master.key` |
+| `TERRAFORM_STATE_ACCESS_KEY` | Access key for terraform state bucket |
+| `TERRAFORM_STATE_SECRET_ACCESS_KEY` | Secret key for terraform state bucket |
+
+
 
 #### Production
+
+Deploys to production, including applying changes in terraform, happen
+on every push to the `production` branch in GitHub.
+
+The following secrets must be set within [CircleCI Environment Variables](https://circleci.com/docs/2.0/env-vars/)
+to enable a deploy to work:
+
+| Secret Name | Description |
+| ----------- | ----------- |
+| `CF_PRODUCTION_USERNAME` | cloud.gov SpaceDeployer username |
+| `CF_PRODUCTION_PASSWORD` | cloud.gov SpaceDeployer password |
+| `PRODUCTION_RAILS_MASTER_KEY` | `config/credentials/production.key` |
+| `AWS_ACCESS_KEY_ID` | Access key for terraform state bucket |
+| `AWS_SECRET_ACCESS_KEY` | Secret key for terraform state bucket |
+
+
+Deploys to production, including applying changes in terraform, happen
+on every push to the `production` branch in GitHub.
+
+The following secrets must be set within the `production` [environment secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-an-environment)
+to enable a deploy to work:
+
+| Secret Name | Description |
+| ----------- | ----------- |
+| `CF_USERNAME` | cloud.gov SpaceDeployer username |
+| `CF_PASSWORD` | cloud.gov SpaceDeployer password |
+| `RAILS_MASTER_KEY` | `config/credentials/production.key` |
+| `TERRAFORM_STATE_ACCESS_KEY` | Access key for terraform state bucket |
+| `TERRAFORM_STATE_SECRET_ACCESS_KEY` | Secret key for terraform state bucket |
+
 
 
 ### Configuring ENV variables in cloud.gov
@@ -127,9 +195,34 @@ Otherwise, they are set as a `((variable))` within `manifest.yml` and the variab
 
 #### Credentials and other Secrets
 
+1. Store variables that must be secret using [CircleCI Environment Variables](https://circleci.com/docs/2.0/env-vars/)
+1. Add the appropriate `--var` addition to the `cf push` line on the deploy job
+
+1. Store variables that must be secret using [GitHub Environment Secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-an-environment)
+1. Add the appropriate `--var` addition to the `cf_command` line on the deploy action like the existing `rails_master_key`
+
 #### Non-secrets
 
 Configuration that changes from staging to production, but is public, should be added to `config/deployment/staging.yml` and `config/deployment/production.yml`
+
+## Monitoring with New Relic
+
+The [New Relic Ruby agent](https://docs.newrelic.com/docs/apm/agents/ruby-agent/getting-started/introduction-new-relic-ruby) has been installed for monitoring this application.
+
+The config lives at `config/newrelic.yml`, and points to a [FEDRAMP version of the New Relic service as its host](https://docs.newrelic.com/docs/security/security-privacy/compliance/fedramp-compliant-endpoints/). To access the metrics dashboard, you will need to be connected to VPN.
+
+### Getting started
+
+To get started sending metrics via New Relic APM:
+1. Add your New Relic license key to the Rails credentials with key `new_relic_key`.
+1. Optionally, update `app_name` entries in `config/newrelic.yml` with what is registered for your application in New Relic
+1. Comment out the `agent_enabled: false` line in `config/newrelic.yml`
+1. Add the [Javascript snippet provided by New Relic](https://docs.newrelic.com/docs/browser/browser-monitoring/installation/install-browser-monitoring-agent) into `application.html.erb`. It is recommended to vary this based on environment (i.e. include one snippet for staging and another for production).
+## Analytics
+
+Digital Analytics Program (DAP) code has been included for the Production environment, associated with GSA.
+
+If Rtci is for another agency, update the agency line in `app/views/layouts/application.html.erb`
 
 ## Documentation
 

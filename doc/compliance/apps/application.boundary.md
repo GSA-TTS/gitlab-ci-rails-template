@@ -28,23 +28,43 @@ Boundary(aws, "AWS GovCloud") {
         System_Ext(cloudgov_router, "<&layers> cloud.gov routers", "Cloud Foundry traffic service")
         Boundary(atob, "ATO boundary") {
             System_Boundary(inventory, "Application") {
-                Container(app, "<&layers> Rails Template Ci Test", "Ruby 3.3.4, Rails 7.1.3.4", "TKTK Application Description")
+                Container(app, "<&layers> Rtci", "Ruby 3.3.4, Rails 7.1.3.4", "TKTK Application Description")
                 ContainerDb(app_db, "Application DB", "AWS RDS (PostgreSQL)", "Primary data storage")
+                Container(worker, "<&layers> Sidekiq workers", "Ruby 3.3.4, Sidekiq", "Perform background work and data processing")
+                ContainerDb(redis, "Redis Database", "AWS ElastiCache (Redis)", "Background job queue")
             }
         }
     }
 }
 
 Boundary(gsa_saas, "GSA-authorized SaaS") {
+    System_Ext(dap, "DAP", "Analytics collection")
+    System_Ext(newrelic, "New Relic", "Monitoring SaaS")
 }
 
 Boundary(cicd, "CI/CD Pipeline") {
+    System_Ext(github, "GitHub", "GSA-controlled code repository")
+    System_Ext(circleci, "CircleCI", "Continuous Integration Service")
+    System_Ext(githuball, "GitHub w/ GitHub Actions", "GSA-controlled code repository and Continuous Integration Service")
 }
 
 Rel(browser, aws_alb, "request info, submit requests", "https GET/POST (443)")
 Rel(aws_alb, cloudgov_router, "proxies requests", "https GET/POST (443)")
 Rel(cloudgov_router, app, "proxies requests", "https GET/POST (443)")
 Rel(app, app_db, "reads/writes primary data", "psql (5432)")
+Rel(app, newrelic, "reports telemetry (ruby agent)", "tcp (443)")
+Rel(browser, newrelic, "reports ux metrics (javascript agent)", "https (443)")
+Rel(developer, newrelic, "Manage performance", "https (443)")
+Rel(browser, dap, "reports usage", "https (443)")
+Rel(developer, dap, "View traffic statistics", "https GET (443)")
+Rel(app, redis, "enqueue job parameters", "redis")
+Rel(worker, redis, "dequeues job parameters", "redis")
+Rel(worker, app_db, "reads/writes primary data", "psql (5432)")
+Rel(developer, githuball, "Publish code", "git ssh (22)")
+Rel(githuball, cg_api, "Deploy App", "Auth: SpaceDeployer Service Account, https (443)")
+Rel(developer, github, "Publish code", "git ssh (22)")
+Rel(github, circleci, "Commit hook notifies CircleCI to run CI/CD pipeline", "https POST (443)")
+Rel(circleci, cg_api, "Deploy App", "Auth: SpaceDeployer Service Account, https (443)")
 @enduml
 ```
 

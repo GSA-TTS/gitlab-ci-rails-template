@@ -21,13 +21,13 @@ default: &default
 
 development:
   <<: *default
-  database: rails_template_ci_test_development
+  database: rtci_development
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
   # When left blank, PostgreSQL will use the default role. This is
   # the same name as the operating system user running Rails.
-  #username: rails_template_ci_test
+  #username: rtci
 
   # The password associated with the PostgreSQL role (username).
   #password:
@@ -55,7 +55,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: rails_template_ci_test_test
+  database: rtci_test
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -79,16 +79,16 @@ test:
 #
 production:
   <<: *default
-  database: rails_template_ci_test_production
-  username: rails_template_ci_test
-  password: <%= ENV["RAILS_TEMPLATE_CI_TEST_DATABASE_PASSWORD"] %>
+  database: rtci_production
+  username: rtci
+  password: <%= ENV["RTCI_DATABASE_PASSWORD"] %>
 
 ci:
   <<: *default
   # db will be configured by DATABASE_URL in CI. Use dev db here for ease of local use
-  database: rails_template_ci_test_development
+  database: rtci_development
 
 staging:
   <<: *default
   # db will be configured by DATABASE_URL in a "real" staging env. Use dev db here for ease of local use
-  database: rails_template_ci_test_development
+  database: rtci_development

@@ -23,7 +23,7 @@ jobs:
           --health-retries 5
         ports: ["5432:5432"]
         env:
-          POSTGRES_DB: continuous_monitoring_test
+          POSTGRES_DB: rtci_test
           POSTGRES_USER: cidbuser
           POSTGRES_PASSWORD: postgres
 

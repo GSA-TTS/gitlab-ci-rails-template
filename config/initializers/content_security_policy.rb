@@ -10,20 +10,18 @@ Rails.application.configure do
     policy.font_src :self
     policy.form_action :self
     policy.frame_ancestors :none
-    policy.img_src :self, :data
+    policy.img_src :self, :data, "https://www.google-analytics.com"
     policy.object_src :none
-    policy.script_src :self
-    policy.connect_src :self
-    # 'unsafe-inline' is needed because Turbo uses inline CSS for at least the progress bar
-policy.style_src :self, "'unsafe-inline'"
-
+    policy.script_src :self, "https://js-agent.newrelic.com", "https://*.nr-data.net", "https://dap.digitalgov.gov", "https://www.google-analytics.com"
+    policy.connect_src :self, "https://*.nr-data.net", "https://dap.digitalgov.gov", "https://www.google-analytics.com"
+    policy.style_src :self
   end
 
-#
-#   # Generate session nonces for permitted importmap, inline scripts, and inline styles.
+  #
+  #   # Generate session nonces for permitted importmap, inline scripts, and inline styles.
   config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
-  config.content_security_policy_nonce_directives = %w(script-src style-src)
-#
-#   # Report violations without enforcing the policy.
-#   # config.content_security_policy_report_only = true
+  config.content_security_policy_nonce_directives = %w[script-src style-src]
+  #
+  #   # Report violations without enforcing the policy.
+  #   # config.content_security_policy_report_only = true
 end

@@ -18,3 +18,14 @@ if [ $linter_status -ne 0 ]; then
     echo "Fix above before committing. Run 'git commit -n' to bypass linter."
     exit 1
 fi
+
+echo "Running Terraform formatter"
+files=$(git diff --cached --name-only terraform)
+for f in $files
+do
+  # Format any *.tf files that were cached/staged
+  if [ -e "$f" ] && [[ $f == *.tf ]]; then
+    terraform fmt "$f"
+    git add "$f"
+  fi
+done

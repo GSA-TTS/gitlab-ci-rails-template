@@ -13,6 +13,11 @@ The source for other things (OSCAL for control descriptions, evidence generation
 The UML source of the application boundary is stored at doc/compliance/apps/application.boundary.md.
 The rendered output is saved to doc/compliance/rendered/apps/application.boundary.svg
 
+### Logical Data Model
+
+The logical data model will be auto-generated on each database migration.
+The rendered output is saved to doc/compliance/rendered/apps/data.logical.pdf
+
 ## Development
 
 These plugins may be helpful for editing diagrams.
