@@ -28,7 +28,7 @@ Boundary(aws, "AWS GovCloud") {
         System_Ext(cloudgov_router, "<&layers> cloud.gov routers", "Cloud Foundry traffic service")
         Boundary(atob, "ATO boundary") {
             System_Boundary(inventory, "Application") {
-                Container(app, "<&layers> Rtci", "Ruby 3.3.4, Rails 7.1.3.4", "TKTK Application Description")
+                Container(app, "<&layers> Rtci", "Ruby 3.3.4, Rails 7.1.3.4", "rtci Application Description")
                 ContainerDb(app_db, "Application DB", "AWS RDS (PostgreSQL)", "Primary data storage")
                 Container(worker, "<&layers> Sidekiq workers", "Ruby 3.3.4, Sidekiq", "Perform background work and data processing")
                 ContainerDb(redis, "Redis Database", "AWS ElastiCache (Redis)", "Background job queue")

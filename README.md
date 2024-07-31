@@ -1,7 +1,7 @@
 Rtci
 ========================
 
-<<TKTK: quick summary of project>>
+<<rtci: quick summary of project>>
 
 ## Development
 
