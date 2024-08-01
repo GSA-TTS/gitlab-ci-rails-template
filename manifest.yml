@@ -14,10 +14,12 @@ applications:
   - type: worker
     instances: ((worker_instances))
     memory: ((worker_memory))
+    disk_quota: 2GB
     command: bundle exec sidekiq
   - type: web
     instances: ((web_instances))
     memory: ((web_memory))
+    disk_quota: 2GB
     command: bundle exec rake cf:on_first_instance db:migrate && bundle exec rails s -b 0.0.0.0 -p $PORT -e $RAILS_ENV
   services:
   - rtci-redis-((env))
