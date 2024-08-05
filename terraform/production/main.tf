@@ -18,9 +18,9 @@ module "database" {
 module "redis" {
   source = "github.com/gsa-tts/terraform-cloudgov//redis?ref=v1.0.0"
 
-  cf_org_name     = local.cf_org_name
-  cf_space_name   = local.cf_space_name
-  name            = "${local.app_name}-redis-${local.env}"
+  cf_org_name   = local.cf_org_name
+  cf_space_name = local.cf_space_name
+  name          = "${local.app_name}-redis-${local.env}"
   # redis_plan_name = "rtci-production-redis-plan"
   redis_plan_name = "redis-dev"
 }
