@@ -25,20 +25,24 @@ yarn-audit:
   - echo "Scan complete"
 ruby-bom:
   stage: build
+  script:
   - echo "Ruby SBOM Generation..."
   - echo "Generation Complete"
 owasp-scan: 
   stage: test
   #TODO: check gitlab security templates for this scan
   #TODO: Owasp Dail Scan
+  script:
   - echo "OWASP ZAP Scan..."
   - echo "Scan Complete"
 pa11y-scan: 
   stage: test
+  script:
   - echo "Pa11y Scan..."
   - echo "Scan Complete"
 rspec:
   stage: test
+  script:
   - echo "Rspec..."
   - echo "Rspec Complete"
 
