@@ -50,15 +50,23 @@ rspec:
 deploy-staging:
   stage: deploy
   environment: staging
+  script: 
+  - echo "deploy staging"
 deploy-production:
   stage: deploy
   environment: production
+  script: 
+  - echo "deploy staging"
 terraform-staging:
   stage: deploy
   environment: staging
+  script: 
+  - echo "deploy staging"
 terraform-production:
   stage: deploy
   environment: production
+  script: 
+  - echo "deploy production"
 
 sast:
   stage: test
