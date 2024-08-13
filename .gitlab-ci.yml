@@ -10,6 +10,17 @@
 
 default:
   image: ruby:3.3.4
+  cache:
+    - key:
+        files:
+          - yarn.lock
+      paths:
+        - .yarn-cache/
+    - key:
+        files:
+          - Gemfile.lock
+      paths:
+        - vendor/ruby
 
 stages:
   - setup
@@ -17,17 +28,23 @@ stages:
   - test
   - deploy
 
-.setup_languages: &setup_languages
-  # Ruby Gems
-  - bundle install
-  # Download Node & Yarn
+.setup_node: &setup_node
   - apt-get install -y curl
   - curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
   - bash nodesource_setup.sh
   - apt-get install -y nodejs
   - npm install --global yarn
-  # Install Node Dependencies
-  - yarn install --frozen-lockfile
+
+.install_deps: &install_deps
+  - bundle config set --local path 'vendor/ruby'
+  - bundle install -j $(nproc)
+  - echo 'yarn-offline-mirror ".yarn-cache/"' >> .yarnrc
+  - echo 'yarn-offline-mirror-pruning true' >> .yarnrc
+  - yarn install --frozen-lockfile --no-progress
+
+.setup_languages: &setup_languages
+  - *setup_node
+  - *install_deps
 
 test-langs:
   stage: setup
