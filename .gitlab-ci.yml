@@ -36,11 +36,16 @@ stages:
   - npm install --global yarn
 
 .install_deps: &install_deps
+  # Ruby deps
   - bundle config set --local path 'vendor/ruby'
   - bundle install -j $(nproc)
+  # Node deps
   - echo 'yarn-offline-mirror ".yarn-cache/"' >> .yarnrc
   - echo 'yarn-offline-mirror-pruning true' >> .yarnrc
+  - cat .yarnrc
   - yarn install --frozen-lockfile --no-progress
+  - ls .yarn-cache
+  - du -h -d3 -t10M .yarn-cache | sort -hr
 
 .setup_languages: &setup_languages
   - *setup_node
