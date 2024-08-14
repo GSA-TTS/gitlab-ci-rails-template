@@ -96,6 +96,8 @@ test-setup-project:
   stage: setup
   needs: ["install-deps"]
   script:
+    - *ruby_deps
+    - *node_deps
     - *setup_project
 
 .brakeman-scan:
