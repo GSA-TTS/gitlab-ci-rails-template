@@ -13,11 +13,6 @@ default:
   cache:
     - key:
         files:
-          - yarn.lock
-      paths:
-        - .yarn-cache/
-    - key:
-        files:
           - Gemfile.lock
       paths:
         - vendor/ruby
@@ -40,12 +35,7 @@ stages:
   - bundle config set --local path 'vendor/ruby'
   - bundle install -j $(nproc)
   # Node deps
-  - echo 'yarn-offline-mirror ".yarn-cache/"' >> .yarnrc
-  - echo 'yarn-offline-mirror-pruning true' >> .yarnrc
-  - cat .yarnrc
-  - ls .yarn-cache
-  - du -h -d3 -t10M .yarn-cache | sort -hr
-  - yarn install --frozen-lockfile --no-progress --offline
+  - yarn install --frozen-lockfile --no-progress
 
 .setup_languages: &setup_languages
   - *setup_node
