@@ -53,6 +53,7 @@ stages:
   - yarn install --frozen-lockfile --no-progress --ignore-engines
 
 .setup-project: &setup_project
+  - echo $DATABASE_URL
   - bundle exec rake assets:precompile
   - bundle exec rake db:schema:load
 
