@@ -69,7 +69,7 @@ test-langs:
     - *ruby_deps
     - *node_deps
 
-test-langs-puppet:
+.test-langs-puppet:
   stage: setup
   cache:
     - <<: *yarn_cache
