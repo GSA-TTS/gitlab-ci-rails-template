@@ -9,7 +9,7 @@
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 
 default:
-  image: ruby:3.3.4
+  image: ruby:3.3.4-slim
   cache:
     - key:
         files:
