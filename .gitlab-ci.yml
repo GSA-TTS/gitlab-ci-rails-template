@@ -54,8 +54,7 @@ stages:
 
 .setup-project: &setup_project
   - bundle exec rake assets:precompile
-  - bundle exec rake db:schema-load
-
+  - bundle exec rake db:schema:load
 
 variables:
   RAILS_ENV: ci
