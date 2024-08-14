@@ -43,9 +43,9 @@ stages:
   - echo 'yarn-offline-mirror ".yarn-cache/"' >> .yarnrc
   - echo 'yarn-offline-mirror-pruning true' >> .yarnrc
   - cat .yarnrc
-  - yarn install --frozen-lockfile --no-progress
   - ls .yarn-cache
   - du -h -d3 -t10M .yarn-cache | sort -hr
+  - yarn install --frozen-lockfile --no-progress --offline
 
 .setup_languages: &setup_languages
   - *setup_node
