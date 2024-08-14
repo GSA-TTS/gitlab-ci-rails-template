@@ -58,7 +58,7 @@ stages:
   - *setup_node
   - yarn install --frozen-lockfile --no-progress --ignore-engines
 
-test-langs:
+install-deps:
   stage: setup
   cache:
     - <<: *ruby_cache
@@ -69,7 +69,7 @@ test-langs:
     - *ruby_deps
     - *node_deps
 
-.test-langs-puppet:
+.install-deps-puppet:
   stage: setup
   cache:
     - <<: *yarn_cache
