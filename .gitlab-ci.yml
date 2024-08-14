@@ -8,6 +8,12 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 
+stages:
+  - setup
+  - build
+  - test
+  - deploy
+
 .build_cache:
   - &ruby_cache
     key:
@@ -24,18 +30,6 @@
     paths:
       - .yarn-cache/
     policy: pull
-
-default:
-  image: ruby:3.3.4
-  cache:
-    - <<: *ruby_cache
-    - <<: *yarn_cache
-
-stages:
-  - setup
-  - build
-  - test
-  - deploy
 
 .setup_node: &setup_node
   - apt-get install -y curl
@@ -58,8 +52,28 @@ stages:
   - *setup_node
   - yarn install --frozen-lockfile --no-progress --ignore-engines
 
+.setup-project: &setup_project
+  - bundle exec rake assets:precompile
+  - bundle exec rake db:schema-load
+
+default:
+  image: ruby:3.3.4
+  variables:
+    RAILS_ENV: ci
+    DATABASE_URL: 'postgres://postgres:password@"$CI_SERVICE_PG_URL":5432/rtci_test'
+    SECRET_KEY_BASE: not-actually-secret
+  services:
+    image: postgres:15
+    alias: PG_URL
+  cache:
+    - <<: *ruby_cache
+    - <<: *yarn_cache
+
 install-deps:
   stage: setup
+  inherit:
+    default:
+      - image
   cache:
     - <<: *ruby_cache
       policy: pull-push
@@ -75,6 +89,12 @@ install-deps:
     - <<: *yarn_cache
   script:
     - *node_deps_puppet
+
+test-setup-project:
+  stage: setup
+  needs: ["install-deps"]
+  script:
+    - *setup_project
 
 .brakeman-scan:
   stage: test
