@@ -8,19 +8,28 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 
+.build_cache:
+  - &ruby_cache
+    key:
+      files:
+        - Gemfile.lock
+    paths:
+      - vendor/ruby
+    policy: pull
+
+  - &yarn_cache
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - .yarn-cache/
+    policy: pull
+
 default:
   image: ruby:3.3.4
   cache:
-    - key:
-        files:
-          - yarn.lock
-      paths:
-        - .yarn-cache/
-    - key:
-        files:
-          - Gemfile.lock
-      paths:
-        - vendor/ruby
+    - <<: *ruby_cache
+    - <<: *yarn_cache
 
 stages:
   - setup
@@ -34,24 +43,38 @@ stages:
   - bash nodesource_setup.sh
   - apt-get install -y nodejs
   - npm install --global yarn
-
-.install_deps: &install_deps
-  # Ruby deps
-  - bundle config set --local path 'vendor/ruby'
-  - bundle install -j $(nproc)
-  # Node deps
   - echo 'yarn-offline-mirror ".yarn-cache/"' >> .yarnrc
   - echo 'yarn-offline-mirror-pruning true' >> .yarnrc
-  - yarn install --frozen-lockfile --no-progress
 
-.setup_languages: &setup_languages
+.ruby_deps: &ruby_deps
+  - bundle config set --local path 'vendor/ruby'
+  - bundle install -j $(nproc)
+
+.node_deps: &node_deps
   - *setup_node
-  - *install_deps
+  - PUPPETEER_SKIP_DOWNLOAD=true yarn install --frozen-lockfile --no-progress --ignore-engines
+
+.node_deps_puppet: &node_deps_puppet
+  - *setup_node
+  - yarn install --frozen-lockfile --no-progress --ignore-engines
 
 test-langs:
   stage: setup
+  cache:
+    - <<: *ruby_cache
+      policy: pull-push
+    - <<: *yarn_cache
+      policy: pull-push
   script:
-    - *setup_languages
+    - *ruby_deps
+    - *node_deps
+
+test-langs-puppet:
+  stage: setup
+  cache:
+    - <<: *yarn_cache
+  script:
+    - *node_deps_puppet
 
 .brakeman-scan:
   stage: test
