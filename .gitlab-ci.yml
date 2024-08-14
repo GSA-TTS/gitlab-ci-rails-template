@@ -56,15 +56,17 @@ stages:
   - bundle exec rake assets:precompile
   - bundle exec rake db:schema-load
 
+
+variables:
+  RAILS_ENV: ci
+  DATABASE_URL: 'postgres://postgres:password@"$CI_SERVICE_PG_URL":5432/rtci_test'
+  SECRET_KEY_BASE: not-actually-secret
+
 default:
   image: ruby:3.3.4
-  variables:
-    RAILS_ENV: ci
-    DATABASE_URL: 'postgres://postgres:password@"$CI_SERVICE_PG_URL":5432/rtci_test'
-    SECRET_KEY_BASE: not-actually-secret
   services:
-    image: postgres:15
-    alias: PG_URL
+    - name: postgres:15
+      alias: PG_URL
   cache:
     - <<: *ruby_cache
     - <<: *yarn_cache
