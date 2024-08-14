@@ -59,14 +59,16 @@ stages:
 
 variables:
   RAILS_ENV: ci
-  DATABASE_URL: 'postgres://postgres:password@"$CI_SERVICE_PG_URL":5432/rtci_test'
   SECRET_KEY_BASE: not-actually-secret
+  POSTGRES_PASSWORD: testpass123
 
 default:
   image: ruby:3.3.4
   services:
     - name: postgres:15
       alias: PG_URL
+      variables:
+        DATABASE_URL: 'postgres://postgres:$POSTGRES_PASSWORD@"$CI_SERVICE_PG_URL":5432/rtci_test'
   cache:
     - <<: *ruby_cache
     - <<: *yarn_cache
