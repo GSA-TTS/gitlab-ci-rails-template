@@ -92,12 +92,14 @@ test-setup-project:
     - name: postgres:15
       alias: PG_SVC
   variables:
-    DATABASE_URL: 'postgres://postgres:$POSTGRES_PASSWORD@"$CI_SERVICE_PG_SVC":5432/rtci_test'
+    DATABASE_URL: 'postgres://postgres:$POSTGRES_PASSWORD@$CI_SERVICE_PG_SVC:5432/rtci_test'
   script:
     - *ruby_deps
     - *node_deps
     - echo $DATABASE_URL
     - echo $CI_SERVICE_PG_SVC
+    - echo "postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_PG_SVC}:5432/rtci_test"
+    - export DATABASE_URL="postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_PG_SVC}:5432/rtci_test"
     - bundle exec rake assets:precompile
     - bundle exec rake db:schema:load
 
