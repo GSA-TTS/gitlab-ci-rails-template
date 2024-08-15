@@ -61,7 +61,6 @@ variables:
   RAILS_ENV: ci
   SECRET_KEY_BASE: not-actually-secret
   POSTGRES_PASSWORD: testpass123
-  DATABASE_URL: 'postgres://postgres:$POSTGRES_PASSWORD@"$CI_SERVICE_PG_URL":5432/rtci_test'
 
 default:
   image: ruby:3.3.4
@@ -96,6 +95,8 @@ install-deps:
 test-setup-project:
   stage: setup
   needs: ["install-deps"]
+  variables:
+    DATABASE_URL: 'postgres://postgres:$POSTGRES_PASSWORD@"$CI_SERVICE_PG_URL":5432/rtci_test'
   script:
     - *ruby_deps
     - *node_deps
