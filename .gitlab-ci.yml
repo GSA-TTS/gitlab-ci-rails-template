@@ -92,7 +92,7 @@ test-setup-project:
     - name: postgres:15
       alias: pg
       variables:
-        POSTGRES_PASSWORD: testpass123
+        POSTGRES_PASSWORD: turtleturtle
   script:
     - *ruby_deps
     - *node_deps
