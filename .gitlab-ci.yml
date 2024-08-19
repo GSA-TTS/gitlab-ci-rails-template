@@ -89,9 +89,15 @@ test-setup-project:
   stage: setup
   needs: ["install-deps"]
   services:
+    - name: redis
+      alias: redis
+      variables:
+        REDIS_THING: haberdashery
+        POSTGRES_PASSWORD: batsbatsbats
     - name: postgres:15
       alias: pg
       variables:
+        HULA_HOOP: foryourlife
         POSTGRES_PASSWORD: turtleturtle
   script:
     - *ruby_deps
