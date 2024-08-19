@@ -1,75 +1,141 @@
 # You can override the included template(s) by including variable overrides
+#
 # SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
 # Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+#
 # Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+#
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+
+.build_cache:
+  - &ruby_cache
+    key:
+      files:
+        - Gemfile.lock
+    paths:
+      - vendor/ruby
+    policy: pull
+
+  - &yarn_cache
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - .yarn-cache/
+    policy: pull
+
+default:
+  image: ruby:3.3.4
+  cache:
+    - <<: *ruby_cache
+    - <<: *yarn_cache
+
 stages:
-- build
-- test
-- deploy
-brakeman-scan:
+  - setup
+  - build
+  - test
+  - deploy
+
+.setup_node: &setup_node
+  - apt-get install -y curl
+  - curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
+  - bash nodesource_setup.sh
+  - apt-get install -y nodejs
+  - npm install --global yarn
+  - echo 'yarn-offline-mirror ".yarn-cache/"' >> .yarnrc
+  - echo 'yarn-offline-mirror-pruning true' >> .yarnrc
+
+.ruby_deps: &ruby_deps
+  - bundle config set --local path 'vendor/ruby'
+  - bundle install -j $(nproc)
+
+.node_deps: &node_deps
+  - *setup_node
+  - PUPPETEER_SKIP_DOWNLOAD=true yarn install --frozen-lockfile --no-progress --ignore-engines
+
+.node_deps_puppet: &node_deps_puppet
+  - *setup_node
+  - yarn install --frozen-lockfile --no-progress --ignore-engines
+
+install-deps:
+  stage: setup
+  cache:
+    - <<: *ruby_cache
+      policy: pull-push
+    - <<: *yarn_cache
+      policy: pull-push
+  script:
+    - *ruby_deps
+    - *node_deps
+
+.install-deps-puppet:
+  stage: setup
+  cache:
+    - <<: *yarn_cache
+  script:
+    - *node_deps_puppet
+
+.brakeman-scan:
   stage: test
   script:
   - echo "Brakeman scan..."
   - echo "Scan complete."
-bundle-audit:
+.bundle-audit:
   stage: build
   script:
   - echo "Bundle audit..."
   - echo "Scan complete"
-yarn-audit:
+.yarn-audit:
   stage: build
   script: 
   - echo "Yarn audit..."
   - echo "Scan complete"
-ruby-bom:
+.ruby-bom:
   stage: build
   script:
   - echo "Ruby SBOM Generation..."
   - echo "Generation Complete"
-owasp-scan: 
+.owasp-scan:
   stage: test
   #TODO: check gitlab security templates for this scan
   #TODO: Owasp Dail Scan
   script:
   - echo "OWASP ZAP Scan..."
   - echo "Scan Complete"
-pa11y-scan: 
+.pa11y-scan:
   stage: test
   script:
   - echo "Pa11y Scan..."
   - echo "Scan Complete"
-rspec:
+.rspec:
   stage: test
   script:
   - echo "Rspec..."
   - echo "Rspec Complete"
 
-
-deploy-staging:
+.deploy-staging:
   stage: deploy
   environment: staging
   script: 
   - echo "deploy staging"
-deploy-production:
+.deploy-production:
   stage: deploy
   environment: production
   script: 
   - echo "deploy staging"
-terraform-staging:
+.terraform-staging:
   stage: deploy
   environment: staging
   script: 
   - echo "deploy staging"
-terraform-production:
+.terraform-production:
   stage: deploy
   environment: production
   script: 
   - echo "deploy production"
 
-sast:
+.sast:
   stage: test
-include:
-- template: Security/SAST.gitlab-ci.yml
-
+  include:
+  - template: Security/SAST.gitlab-ci.yml
