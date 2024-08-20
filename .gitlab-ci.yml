@@ -96,6 +96,7 @@ test-setup-project:
     - *ruby_deps
     - *node_deps
     - export DATABASE_URL="postgres://postgres:turtleturtle@${CI_SERVICE_pg}:5432/rtci_test"
+    - bin/rails db:create
     - bundle exec rake assets:precompile
     - bundle exec rake db:schema:load
 
