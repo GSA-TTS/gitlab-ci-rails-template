@@ -52,11 +52,11 @@ stages:
   - bundle install -j $(nproc)
 
 .node_deps: &node_deps
-  - *setup_node
+  - <<: *setup_node
   - PUPPETEER_SKIP_DOWNLOAD=true yarn install --frozen-lockfile --no-progress --ignore-engines
 
 .node_deps_puppet: &node_deps_puppet
-  - *setup_node
+  - <<: *setup_node
   - yarn install --frozen-lockfile --no-progress --ignore-engines
 
 variables:
@@ -82,15 +82,15 @@ install-deps:
     - <<: *yarn_cache
       policy: pull-push
   script:
-    - *ruby_deps
-    - *node_deps
+    - <<: *ruby_deps
+    - <<: *node_deps
 
 .install-deps-puppet:
   stage: setup
   cache:
     - <<: *yarn_cache
   script:
-    - *node_deps_puppet
+    - <<: *node_deps_puppet
 
 test-setup-project:
   stage: setup
@@ -104,8 +104,8 @@ test-setup-project:
     - name: postgres:15
       alias: pg
   script:
-    - *ruby_deps
-    - *node_deps
+    - <<: *ruby_deps
+    - <<: *node_deps
     - export DATABASE_URL="postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_pg}:5432/rtci_test"
     - bin/rails db:create
     - bundle exec rake assets:precompile
