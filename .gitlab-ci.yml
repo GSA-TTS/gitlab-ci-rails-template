@@ -35,7 +35,7 @@ stages:
     key: $CI_COMMIT_SHA
     paths:
       - tmp/cache/assets
-      - pulbic/assets
+      - public/assets
     policy: pull
 
 .setup_node: &setup_node
