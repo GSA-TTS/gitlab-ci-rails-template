@@ -31,6 +31,13 @@ stages:
       - .yarn-cache/
     policy: pull
 
+  - &assets_cache
+    key: $CI_COMMIT_SHA
+    paths:
+      - tmp/cache/assets
+      - pulbic/assets
+    policy: pull
+
 .setup_node: &setup_node
   - apt-get install -y curl
   - curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
@@ -62,6 +69,7 @@ default:
   cache:
     - <<: *ruby_cache
     - <<: *yarn_cache
+    - <<: *assets_cache
 
 install-deps:
   stage: setup
@@ -87,6 +95,11 @@ install-deps:
 test-setup-project:
   stage: setup
   needs: ["install-deps"]
+  cache:
+    - <<: *ruby_cache
+    - <<: *yarn_cache
+    - <<: *assets_cache
+      policy: pull-push
   services:
     - name: postgres:15
       alias: pg
