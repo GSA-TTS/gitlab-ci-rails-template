@@ -63,6 +63,7 @@ variables:
   RAILS_ENV: ci
   SECRET_KEY_BASE: not-actually-secret
   POSTGRES_PASSWORD: testpass123
+  DATABASE_URL: "postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_pg}:5432/rtci_test"
 
 default:
   image: ruby:3.3.4
@@ -100,19 +101,14 @@ test-setup-project:
     - <<: *yarn_cache
     - <<: *assets_cache
       policy: pull-push
-  variables:
-    testthing: "howdy pa ${POSTGRES_PASSWORD}"
-    testfoo: "howdy sha ${CI_COMMIT_SHA}"
   services:
     - name: postgres:15
       alias: pg
   script:
     - *ruby_deps
     - *node_deps
-    - export DATABASE_URL="postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_pg}:5432/rtci_test"
-    - echo $testthing
-    - echo $testfoo
     - echo $DATABASE_URL
+    - export DATABASE_URL="postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_pg}:5432/rtci_test"
     - bin/rails db:create
     - bundle exec rake assets:precompile
     - bundle exec rake db:schema:load
