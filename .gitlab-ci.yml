@@ -114,8 +114,10 @@ setup-project:
     - bundle exec rake db:schema:load
     # Try running server just to see if it'll work
     - bundle exec rails server &
+    - RAILS_PID=$!
     - sleep 5
     - RESULT=$(curl http://localhost:8080)
+    - kill $RAILS_PID
     - >-
       if echo "$RESULT" | grep -q "<title>SDFSDFSDFSDFSDFSDF</title>"; then
         echo "Server Run Success"
