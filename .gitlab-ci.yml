@@ -118,14 +118,7 @@ setup-project:
     - sleep 5
     - RESULT=$(curl http://localhost:8080)
     - kill $RAILS_PID
-    - >-
-      if echo "$RESULT" | grep -q "<title>Rtci</title>"; then
-        echo "Rails server ran successfully"
-        exit 0
-      else
-        echo "Rails server curl test failed"
-        exit 1
-      fi
+    - echo "$RESULT" | grep -q "<title>Rtci</title>"
 
 # Need to split out the project setup stuff to get this working, or copy it all in here but that would be silly
 .run-server:
