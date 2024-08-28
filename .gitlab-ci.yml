@@ -119,11 +119,11 @@ setup-project:
     - RESULT=$(curl http://localhost:8080)
     - kill $RAILS_PID
     - >-
-      if echo "$RESULT" | grep -q "<title>SDFSDFSDFSDFSDFSDF</title>"; then
-        echo "Server Run Success"
+      if echo "$RESULT" | grep -q "<title>Rtci</title>"; then
+        echo "Rails server ran successfully"
         exit 0
       else
-        echo "Server Run Failure"
+        echo "Rails server curl test failed"
         exit 1
       fi
 
