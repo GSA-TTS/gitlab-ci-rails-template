@@ -116,7 +116,7 @@ setup-project:
     - bundle exec rails server &
     - RAILS_PID=$!
     - sleep 5
-    - curl http://localhost:8080 | grep -q "<title>Rtci</title>"
+    - curl http://localhost:8080 | grep -q "<title>SDFSDFSDFSDFSDFSDF</title>"
     - kill $RAILS_PID
 
 # Need to split out the project setup stuff to get this working, or copy it all in here but that would be silly
