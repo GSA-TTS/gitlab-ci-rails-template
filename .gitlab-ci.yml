@@ -96,13 +96,24 @@ install-deps:
   script:
   - echo "Ruby SBOM Generation..."
   - echo "Generation Complete"
-.owasp-scan:
+owasp-scan:
   stage: test
-  #TODO: check gitlab security templates for this scan
-  #TODO: Owasp Dail Scan
+  image: owasp/zap2docker-stable:latest #ghcr.io/zaproxy/zaproxy:stable
+  variables: 
+    website: "https://www.example.com/"
+    conf: "zap.conf"
+  before_script:
+  - mkdir -p /zap/wrk
   script:
-  - echo "OWASP ZAP Scan..."
-  - echo "Scan Complete"
+  - zap-baseline.py -I -J zapreport.json -r zapreport.html -t $website -g $conf
+  - cp /zap/wrk/zapreport.json .
+  - cp /zap/wrk/zapreport.html .
+  artifacts:
+    when: always
+    paths:
+    - zapreport.json
+    - zapreport.html
+  
 .pa11y-scan:
   stage: test
   script:
