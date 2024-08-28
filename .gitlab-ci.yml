@@ -112,6 +112,19 @@ setup-project:
     - bin/rails db:create
     - bundle exec rake assets:precompile
     - bundle exec rake db:schema:load
+    # Try running server just to see if it'll work
+    - bundle exec rails server &
+    - sleep 5
+    - curl http://localhost:3000 -I
+
+# Need to split out the project setup stuff to get this working, or copy it all in here but that would be silly
+.run-server:
+  stage: setup
+  needs: ["install-deps", "setup-project"]
+  script:
+    - bundle exec rails server &
+    - sleep 5
+    - curl http://localhost:3000 -I
 
 .brakeman-scan:
   stage: test
