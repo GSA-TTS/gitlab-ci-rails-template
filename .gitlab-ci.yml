@@ -116,6 +116,7 @@ setup-project:
     - bundle exec rails server &
     - sleep 5
     - curl http://localhost:8080 -I
+    - curl http://localhost:8080
 
 # Need to split out the project setup stuff to get this working, or copy it all in here but that would be silly
 .run-server:
