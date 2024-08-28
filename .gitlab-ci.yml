@@ -8,6 +8,12 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 
+stages:
+  - setup
+  - build
+  - test
+  - deploy
+
 .build_cache:
   - &ruby_cache
     key:
@@ -25,17 +31,12 @@
       - .yarn-cache/
     policy: pull
 
-default:
-  image: ruby:3.3.4
-  cache:
-    - <<: *ruby_cache
-    - <<: *yarn_cache
-
-stages:
-  - setup
-  - build
-  - test
-  - deploy
+  - &assets_cache
+    key: $CI_COMMIT_SHA
+    paths:
+      - tmp/cache/assets
+      - public/assets
+    policy: pull
 
 .setup_node: &setup_node
   - apt-get install -y curl
@@ -58,8 +59,23 @@ stages:
   - *setup_node
   - yarn install --frozen-lockfile --no-progress --ignore-engines
 
+variables:
+  RAILS_ENV: ci
+  SECRET_KEY_BASE: not-actually-secret
+  POSTGRES_PASSWORD: testpass123
+
+default:
+  image: ruby:3.3.4
+  cache:
+    - <<: *ruby_cache
+    - <<: *yarn_cache
+    - <<: *assets_cache
+
 install-deps:
   stage: setup
+  inherit:
+    default:
+      - image
   cache:
     - <<: *ruby_cache
       policy: pull-push
@@ -75,6 +91,27 @@ install-deps:
     - <<: *yarn_cache
   script:
     - *node_deps_puppet
+
+# This will almost definitely need to move out to an include
+setup-project:
+  stage: setup
+  needs: ["install-deps"]
+  cache:
+    - <<: *ruby_cache
+    - <<: *yarn_cache
+    - <<: *assets_cache
+      policy: pull-push
+  services:
+    - name: postgres:15
+      alias: pg
+  script:
+    - *ruby_deps
+    - *node_deps
+    # This has to come late because we need CI_SERVICE_pg defined
+    - export DATABASE_URL="postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_pg}:5432/rtci_test"
+    - bin/rails db:create
+    - bundle exec rake assets:precompile
+    - bundle exec rake db:schema:load
 
 .brakeman-scan:
   stage: test
