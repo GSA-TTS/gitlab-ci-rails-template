@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "pa11y-ci": "^3.1.0",
-    "webpack": "^5.93.0",
+    "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4",
     "@csstools/postcss-sass": "^5.1.1",
     "@csstools/sass-import-resolve": "https://github.com/rahearn/sass-import-resolve",
