@@ -14,30 +14,6 @@ stages:
   - test
   - deploy
 
-.build_cache:
-  - &ruby_cache
-    key:
-      files:
-        - Gemfile.lock
-    paths:
-      - vendor/ruby
-    policy: pull
-
-  - &yarn_cache
-    key:
-      files:
-        - yarn.lock
-    paths:
-      - .yarn-cache/
-    policy: pull
-
-  - &assets_cache
-    key: $CI_COMMIT_SHA
-    paths:
-      - tmp/cache/assets
-      - public/assets
-    policy: pull
-
 .setup_node: &setup_node
   - apt-get install -y curl
   - curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
@@ -64,12 +40,12 @@ variables:
   SECRET_KEY_BASE: not-actually-secret
   POSTGRES_PASSWORD: testpass123
 
+include:
+  - local: ".gitlab/caches.yml"
+
 default:
   image: ruby:3.3.4
-  cache:
-    - <<: *ruby_cache
-    - <<: *yarn_cache
-    - <<: *assets_cache
+  extends: .build_cache
 
 install-deps:
   stage: setup
@@ -77,9 +53,9 @@ install-deps:
     default:
       - image
   cache:
-    - <<: *ruby_cache
+    - <<: !reference [.ruby_cache, cache]
       policy: pull-push
-    - <<: *yarn_cache
+    - <<: !reference [.yarn_cache, cache]
       policy: pull-push
   script:
     - *ruby_deps
@@ -87,8 +63,12 @@ install-deps:
 
 .install-deps-puppet:
   stage: setup
+  inherit:
+    default:
+      - image
   cache:
-    - <<: *yarn_cache
+    - <<: !reference [.yarn_cache, cache]
+      policy: pull-push
   script:
     - *node_deps_puppet
 
@@ -97,9 +77,9 @@ setup-project:
   stage: setup
   needs: ["install-deps"]
   cache:
-    - <<: *ruby_cache
-    - <<: *yarn_cache
-    - <<: *assets_cache
+    - !reference [.ruby_cache, cache]
+    - !reference [.yarn_cache, cache]
+    - <<: !reference [.assets_cache, cache]
       policy: pull-push
   services:
     - name: postgres:15

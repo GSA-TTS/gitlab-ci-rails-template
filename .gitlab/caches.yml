@@ -1,0 +1,31 @@
+.ruby_cache:
+  cache:
+    - key:
+        files:
+          - Gemfile.lock
+      paths:
+        - vendor/ruby
+      policy: pull
+
+.yarn_cache:
+  cache:
+    - key:
+        files:
+          - Gemfile.lock
+      paths:
+        - vendor/ruby
+      policy: pull
+
+.assets_cache:
+  cache:
+    - key: $CI_COMMIT_SHA
+      paths:
+        - tmp/cache/assets
+        - public/assets
+      policy: pull
+
+.build_cache:
+  extends:
+    - .ruby_cache
+    - .yarn_cache
+    - .assets_cache
