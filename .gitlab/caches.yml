@@ -1,31 +1,42 @@
-.ruby_cache:
-  cache:
-    - key:
-        files:
-          - Gemfile.lock
-      paths:
-        - vendor/ruby
-      policy: pull
+.cache_ruby:
+  - &cache_ruby
+    key:
+      files:
+        - Gemfile.lock
+    paths:
+      - vendor/ruby
+    policy: pull
 
-.yarn_cache:
-  cache:
-    - key:
-        files:
-          - Gemfile.lock
-      paths:
-        - vendor/ruby
-      policy: pull
+.cache_yarn:
+  - &cache_yarn
+    key:
+      files:
+        - Gemfile.lock
+    paths:
+      - vendor/ruby
+    policy: pull
 
-.assets_cache:
-  cache:
-    - key: $CI_COMMIT_SHA
-      paths:
-        - tmp/cache/assets
-        - public/assets
-      policy: pull
+.cache_assets:
+  - &cache_assets
+    key: $CI_COMMIT_SHA
+    paths:
+      - tmp/cache/assets
+      - public/assets
+    policy: pull
 
-.build_cache:
-  extends:
-    - .ruby_cache
-    - .yarn_cache
-    - .assets_cache
+.cache_pull:
+  - <<: *cache_ruby
+  - <<: *cache_yarn
+  - <<: *cache_assets
+
+.cache_ruby_pull_push:
+  - <<: *cache_ruby
+    policy: pull-push
+
+.cache_yarn_pull_push:
+  - <<: *cache_yarn
+    policy: pull-push
+
+.cache_assets_pull_push:
+  - <<: *cache_assets
+    policy: pull-push

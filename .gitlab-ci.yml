@@ -45,8 +45,8 @@ include:
 
 default:
   image: ruby:3.3.4
-  # cache:
-  # - !reference [.build_cache, cache]
+  cache:
+    - !reference [.cache_pull]
 
 install-deps:
   stage: setup
@@ -54,50 +54,48 @@ install-deps:
     default:
       - image
   cache:
-    - !reference [.ruby_cache, cache]
-    - !reference [.yarn_cache, cache]
+    - !reference [.cache_ruby_pull_push]
+    - !reference [.cache_yarn_pull_push]
   script:
     - *ruby_deps
     - *node_deps
 
-# .install-deps-puppet:
-#   stage: setup
-#   inherit:
-#     default:
-#       - image
-#   cache:
-#     - <<: !reference [.yarn_cache, cache]
-#       policy: pull-push
-#   script:
-#     - *node_deps_puppet
+.install-deps-puppet:
+  stage: setup
+  inherit:
+    default:
+      - image
+  cache:
+    - !reference [.cache_yarn_pull_push]
+  script:
+    - *node_deps_puppet
 
-# # This will almost definitely need to move out to an include
-# setup-project:
-#   stage: setup
-#   needs: ["install-deps"]
-#   cache:
-#     - !reference [.ruby_cache, cache]
-#     - !reference [.yarn_cache, cache]
-#     - <<: !reference [.assets_cache, cache]
-#       policy: pull-push
-#   services:
-#     - name: postgres:15
-#       alias: pg
-#   script:
-#     - *ruby_deps
-#     - *node_deps
-#     # This has to come late because we need CI_SERVICE_pg defined
-#     - export DATABASE_URL="postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_pg}:5432/rtci_test"
-#     - bin/rails db:create
-#     - bundle exec rake assets:precompile
-#     - bundle exec rake db:schema:load
-#     # Try running server just to see if it'll work
-#     - bundle exec rails server &
-#     - RAILS_PID=$!
-#     - sleep 5
-#     - RESULT=$(curl http://localhost:8080)
-#     - kill $RAILS_PID
-#     - echo "$RESULT" | grep -q "<title>Rtci</title>"
+# This will almost definitely need to move out to an include
+setup-project:
+  stage: setup
+  needs: ["install-deps"]
+  cache:
+    - !reference [.cache_ruby]
+    - !reference [.cache_yarn]
+    - !reference [.cache_assets_pull_push]
+  services:
+    - name: postgres:15
+      alias: pg
+  script:
+    - *ruby_deps
+    - *node_deps
+    # This has to come late because we need CI_SERVICE_pg defined
+    - export DATABASE_URL="postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_pg}:5432/rtci_test"
+    - bin/rails db:create
+    - bundle exec rake assets:precompile
+    - bundle exec rake db:schema:load
+    # Try running server just to see if it'll work
+    - bundle exec rails server &
+    - RAILS_PID=$!
+    - sleep 5
+    - RESULT=$(curl http://localhost:8080)
+    - kill $RAILS_PID
+    - echo "$RESULT" | grep -q "<title>Rtci</title>"
 
 # Need to split out the project setup stuff to get this working, or copy it all in here but that would be silly
 .run-server:
