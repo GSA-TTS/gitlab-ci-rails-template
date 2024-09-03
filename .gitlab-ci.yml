@@ -45,7 +45,8 @@ include:
 
 default:
   image: ruby:3.3.4
-  extends: .build_cache
+  cache:
+    - !reference [.build_cache, cache]
 
 install-deps:
   stage: setup
