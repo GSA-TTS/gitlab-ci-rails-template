@@ -54,10 +54,8 @@ install-deps:
     default:
       - image
   cache:
-    - <<: !reference [.ruby_cache, cache]
-      policy: pull-push
-    - <<: !reference [.yarn_cache, cache]
-      policy: pull-push
+    - !reference [.ruby_cache, cache]
+    - !reference [.yarn_cache, cache]
   script:
     - *ruby_deps
     - *node_deps
