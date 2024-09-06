@@ -9,7 +9,6 @@
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 
 stages:
-  - setup
   - build
   - test
   - deploy
@@ -23,6 +22,7 @@ variables:
 include:
   - local: ".gitlab/caches.yml"
   - local: ".gitlab/setup-langs.yml"
+  - local: ".gitlab/setup-project.yml"
 
 default:
   image: ruby:3.3.4
@@ -30,7 +30,7 @@ default:
     - !reference [.cache_pull]
 
 install-deps:
-  stage: setup
+  stage: build
   inherit:
     default:
       - image
@@ -39,40 +39,20 @@ install-deps:
     - !reference [.cache_yarn_pull_push]
   extends: .setup_langs
 
-# This will almost definitely need to move out to an include
-setup-project:
-  stage: setup
-  needs: ["install-deps"]
-  cache:
-    - !reference [.cache_ruby]
-    - !reference [.cache_yarn]
-    - !reference [.cache_assets_pull_push]
-  services:
-    - name: postgres:15
-      alias: pg
+build-project:
+  stage: build
+  extends: .init-build-project
+
+run-server:
+  stage: test
+  extends: .setup-project
   script:
-    - !reference [.setup_langs, script]
-    # This has to come late because we need CI_SERVICE_pg defined
-    - export DATABASE_URL="postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_pg}:5432/rtci_test"
-    - bin/rails db:create
-    - bundle exec rake assets:precompile
-    - bundle exec rake db:schema:load
-    # Try running server just to see if it'll work
     - bundle exec rails server &
     - RAILS_PID=$!
     - sleep 5
     - RESULT=$(curl http://localhost:8080)
     - kill $RAILS_PID
     - echo "$RESULT" | grep -q "<title>Rtci</title>"
-
-# Need to split out the project setup stuff to get this working, or copy it all in here but that would be silly
-.run-server:
-  stage: setup
-  needs: ["install-deps", "setup-project"]
-  script:
-    - bundle exec rails server &
-    - sleep 5
-    - curl http://localhost:3000 -I
 
 .brakeman-scan:
   stage: test
