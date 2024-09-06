@@ -23,6 +23,7 @@ include:
   - local: ".gitlab/caches.yml"
   - local: ".gitlab/setup_langs.yml"
   - local: ".gitlab/setup_project.yml"
+  - local: ".gitlab/run_server.yml"
 
 default:
   image: ruby:3.3.4
@@ -43,15 +44,11 @@ build-project:
   stage: build
   extends: .init-project-build
 
-run-server:
+test-run-server:
   stage: test
-  extends: .setup-project
+  extends: .run-server
   script:
-    - bundle exec rails server &
-    - RAILS_PID=$!
-    - sleep 5
     - RESULT=$(curl http://localhost:8080)
-    - kill $RAILS_PID
     - echo "$RESULT" | grep -q "<title>Rtci</title>"
 
 .brakeman-scan:

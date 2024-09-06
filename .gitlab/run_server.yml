@@ -1,0 +1,12 @@
+include:
+  - local: ".gitlab/setup_project.yml"
+
+.run-server:
+  extends: .setup-project
+  before_script:
+    - bundle exec rails server &
+    - echo "RAILS_PID=$!" >> $GITLAB_ENV
+    - sleep 5
+  after_script:
+    - echo $RAILS_PID
+    - kill $RAILS_PID
