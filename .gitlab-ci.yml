@@ -41,7 +41,7 @@ install-deps:
 
 build-project:
   stage: build
-  extends: .init-build-project
+  extends: .init-project-build
 
 run-server:
   stage: test
