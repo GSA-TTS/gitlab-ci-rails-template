@@ -21,13 +21,13 @@ variables:
 
 include:
   - local: ".gitlab/caches.yml"
-  - local: ".gitlab/setup-langs.yml"
-  - local: ".gitlab/setup-project.yml"
+  - local: ".gitlab/setup_langs.yml"
+  - local: ".gitlab/setup_project.yml"
 
 default:
   image: ruby:3.3.4
   cache:
-    - !reference [.cache_pull]
+    - !reference [.cache-pull]
 
 install-deps:
   stage: build
@@ -35,9 +35,9 @@ install-deps:
     default:
       - image
   cache:
-    - !reference [.cache_ruby_pull_push]
-    - !reference [.cache_yarn_pull_push]
-  extends: .setup_langs
+    - !reference [.cache-ruby-pull-push]
+    - !reference [.cache-yarn-pull-push]
+  extends: .setup-langs
 
 build-project:
   stage: build

@@ -1,13 +1,13 @@
 include:
   - local: ".gitlab/caches.yml"
-  - local: ".gitlab/setup-langs.yml"
+  - local: ".gitlab/setup_langs.yml"
 
 .setup-project:
   services:
     - name: postgres:15
       alias: pg
   before_script:
-    - !reference [.setup_langs, script]
+    - !reference [.setup-langs, script]
     # This has to come late because we need CI_SERVICE_pg defined
     - export DATABASE_URL="postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_pg}:5432/rtci_test"
     - bin/rails db:create
@@ -16,7 +16,7 @@ include:
 
 .init-build-project:
   cache:
-    - !reference [.cache_ruby]
-    - !reference [.cache_yarn]
-    - !reference [.cache_assets_pull_push]
-  extends: .setup_project
+    - !reference [.cache-ruby]
+    - !reference [.cache-yarn]
+    - !reference [.cache-assets-pull-push]
+  extends: .setup-project
