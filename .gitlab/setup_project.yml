@@ -8,7 +8,6 @@ include:
 
 .setup-script: &setup-script
   - !reference [.setup-langs, script]
-  # This has to come late because we need CI_SERVICE_pg defined
   - export DATABASE_URL="postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_pg}:5432/rtci_test"
   - bin/rails db:create
   - bundle exec rake assets:precompile
@@ -16,9 +15,9 @@ include:
 
 .setup-project:
   services:
-    - <<: *pg-service
+    - *pg-service
   before_script:
-    - <<: *setup-script
+    - *setup-script
 
 .init-project-build:
   cache:
@@ -26,6 +25,6 @@ include:
     - !reference [.cache-yarn]
     - !reference [.cache-assets-pull-push]
   services:
-    - <<: *pg-service
+    - *pg-service
   script:
-    - <<: *setup-script
+    - *setup-script
