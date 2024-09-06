@@ -4,9 +4,11 @@ include:
 .run-server:
   extends: .setup-project
   before_script:
+    - !reference [.setup-script]
     - bundle exec rails server &
     - echo "RAILS_PID=$!" >> $GITLAB_ENV
     - sleep 5
-  after_script:
     - echo $RAILS_PID
+    - echo $RAILS_PID
+  after_script:
     - kill $RAILS_PID
