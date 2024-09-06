@@ -20,8 +20,9 @@
   - &cache_assets
     key: $CI_COMMIT_SHA
     paths:
-      - tmp/cache/assets
       - public/assets
+      - tmp/cache/assets
+      - node_modules/.cache/webpack/
     policy: pull
 
 .cache_pull:

@@ -18,6 +18,7 @@ variables:
   RAILS_ENV: ci
   SECRET_KEY_BASE: not-actually-secret
   POSTGRES_PASSWORD: testpass123
+  CACHE_FALLBACK_KEY: main
 
 include:
   - local: ".gitlab/caches.yml"
