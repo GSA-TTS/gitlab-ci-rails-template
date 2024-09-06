@@ -1,6 +1,9 @@
 const path = require("path");
 const webpack = require("webpack");
 
+console.log(process.env.CI);
+console.log(process.env.CI_COMMIT_BRANCH);
+
 module.exports = {
   mode: "production",
   devtool: "source-map",
@@ -18,5 +21,5 @@ module.exports = {
       maxChunks: 1,
     }),
   ],
-  ...(process.env.CI && { cache: { type: "filesystem" } }),
+  ...(true && { cache: { type: "filesystem" } }),
 };
