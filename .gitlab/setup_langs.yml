@@ -1,0 +1,31 @@
+.setup-node: &setup-node
+  - apt-get install -y curl
+  - curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
+  - bash nodesource_setup.sh
+  - apt-get install -y nodejs
+  - npm install --global yarn
+  - echo 'yarn-offline-mirror ".yarn-cache/"' >> .yarnrc
+  - echo 'yarn-offline-mirror-pruning true' >> .yarnrc
+
+.ruby-deps: &ruby-deps
+  - bundle config set --local path 'vendor/ruby'
+  - bundle install -j $(nproc)
+
+.node-deps: &node-deps
+  - *setup-node
+  - PUPPETEER_SKIP_DOWNLOAD=true yarn install --frozen-lockfile --no-progress --ignore-engines
+
+.node-deps-puppet: &node-deps-puppet
+  - *setup-node
+  - yarn install --frozen-lockfile --no-progress --ignore-engines
+
+.setup-langs:
+  script:
+    - *ruby-deps
+    - *node-deps
+
+# Only used by Pa11y for now
+.setup-langs-with-puppet:
+  script:
+    - *ruby-deps
+    - *node-deps-puppet
