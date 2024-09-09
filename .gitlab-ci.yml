@@ -43,6 +43,7 @@ install-deps:
 
 build-project:
   stage: build
+  needs: ["install-deps"]
   extends: .init-project-build
 
 test-run-server:
