@@ -16,6 +16,7 @@ stages:
 variables:
   RAILS_ENV: ci
   SECRET_KEY_BASE: not-actually-secret
+  POSTGRES_DB: rtci_test
   POSTGRES_PASSWORD: testpass123
   CACHE_FALLBACK_KEY: main
 

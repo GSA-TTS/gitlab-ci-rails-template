@@ -8,7 +8,7 @@ include:
 
 .setup-script: &setup-script
   - !reference [.setup-langs, script]
-  - export DATABASE_URL="postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_pg}:5432/rtci_test"
+  - export DATABASE_URL="postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_pg}:5432/${POSTGRES_DB}"
   - bin/rails db:create
   - bundle exec rake assets:precompile
   - bundle exec rake db:schema:load
