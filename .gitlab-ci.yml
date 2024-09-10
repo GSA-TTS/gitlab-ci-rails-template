@@ -58,22 +58,32 @@ test-run-server:
   script:
     - echo "Brakeman scan..."
     - echo "Scan complete."
+    
 bundle-audit:
   stage: test
   extends: .setup-langs
   script:
     - echo "Bundle audit..."
     - bundle exec rake bundler:audit
-.yarn-audit:
-  stage: build
+
+yarn-audit:
+  stage: test
+  extends: .setup-langs
   script:
-    - echo "Yarn audit..."
-    - echo "Scan complete"
+    - bundle exec rake yarn:audit
+
 .ruby-bom:
-  stage: build
+  stage: test 
+  extends: .setup-langs
   script:
     - echo "Ruby SBOM Generation..."
-    - echo "Generation Complete"
+    - gem install cyclonedx-ruby
+    - cyclonedx-ruby -p . -o ruby_bom.xml
+  artifacts:
+    when: always
+    paths:
+      - ./ruby_bom.xml
+    
 .owasp-scan:
   stage: test
   #TODO: check gitlab security templates for this scan
