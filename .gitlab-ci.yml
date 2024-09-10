@@ -103,7 +103,7 @@ ruby-bom:
       - image
   extends: .setup-langs
   before_script:
-  - !reference [.setup-langs, script]
+    - !reference [.setup-langs, script]
   script:
     - echo "Ruby SBOM Generation..."
     - gem install cyclonedx-ruby
