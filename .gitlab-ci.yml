@@ -58,11 +58,14 @@ test-run-server:
   script:
     - echo "Brakeman scan..."
     - echo "Scan complete."
-.bundle-audit:
-  stage: build
+bundle-audit:
+  stage: test
+  extends: .setup-langs
+  before-script:
+    - gem install bundler
   script:
     - echo "Bundle audit..."
-    - echo "Scan complete"
+    - bundle exec rake bundler:audit
 .yarn-audit:
   stage: build
   script:
