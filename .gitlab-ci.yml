@@ -61,8 +61,6 @@ test-run-server:
 bundle-audit:
   stage: test
   extends: .setup-langs
-  before-script:
-    - gem install bundler
   script:
     - echo "Bundle audit..."
     - bundle exec rake bundler:audit
