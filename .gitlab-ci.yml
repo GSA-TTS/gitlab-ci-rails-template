@@ -74,7 +74,7 @@ bundle-audit:
     default:
       - image
   extends: .setup-langs
-  before-script:
+  before_script:
     - !reference [.setup-langs, script]
   script:
     - echo "Bundle audit..."
