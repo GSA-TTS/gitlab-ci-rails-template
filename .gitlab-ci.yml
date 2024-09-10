@@ -70,6 +70,9 @@ bundle-audit:
   stage: test
   tags:
     - tf
+  inherit:
+    default:
+      - image
   extends: .setup-langs
   script:
     - echo "Bundle audit..."
@@ -79,6 +82,9 @@ yarn-audit:
   stage: test
   tags:
     - tf
+  inherit:
+    default:
+      - image
   extends: .setup-langs
   script:
     - bundle exec rake yarn:audit
@@ -87,6 +93,9 @@ ruby-bom:
   stage: test 
   tags:
     - tf
+  inherit:
+    default:
+      - image
   extends: .setup-langs
   script:
     - echo "Ruby SBOM Generation..."
