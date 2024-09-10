@@ -55,12 +55,15 @@ test-run-server:
 
 .brakeman-scan:
   stage: test
+  
   script:
     - echo "Brakeman scan..."
     - echo "Scan complete."
-    
+
 bundle-audit:
   stage: test
+  tags:
+    - tf
   extends: .setup-langs
   script:
     - echo "Bundle audit..."
@@ -68,12 +71,16 @@ bundle-audit:
 
 yarn-audit:
   stage: test
+  tags:
+    - tf
   extends: .setup-langs
   script:
     - bundle exec rake yarn:audit
 
-.ruby-bom:
+ruby-bom:
   stage: test 
+  tags:
+    - tf
   extends: .setup-langs
   script:
     - echo "Ruby SBOM Generation..."
