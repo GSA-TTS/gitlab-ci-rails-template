@@ -33,6 +33,8 @@ default:
 
 install-deps:
   stage: build
+  tags:
+    - tf
   inherit:
     default:
       - image
@@ -43,11 +45,15 @@ install-deps:
 
 build-project:
   stage: build
+  tags:
+    - tf
   needs: ["install-deps"]
   extends: .init-project-build
 
 test-run-server:
   stage: test
+  tags:
+    - tf
   extends: .run-server
   script:
     - RESULT=$(curl http://localhost:8080)
