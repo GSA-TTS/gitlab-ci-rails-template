@@ -74,6 +74,8 @@ bundle-audit:
     default:
       - image
   extends: .setup-langs
+  before-script:
+    - !reference [.setup-langs]
   script:
     - echo "Bundle audit..."
     - bundle exec rake bundler:audit
