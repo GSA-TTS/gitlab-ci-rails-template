@@ -105,8 +105,8 @@ ruby-bom:
   before_script:
     - !reference [.setup-langs, script]
     - gem install cyclonedx-ruby
+    - export PATH=$PATH:/usr/local/bundle/bin
     - gem environment
-    - gem list
   script:
     - echo "Ruby SBOM Generation..."
     - cyclonedx-ruby -p . -o ruby_bom.xml
