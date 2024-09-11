@@ -104,7 +104,8 @@ ruby-bom:
   extends: .setup-langs
   before_script:
     - !reference [.setup-langs, script]
-    - gem install cyclonedx-ruby
+    - sudo gem install cyclonedx-ruby
+    - gem environment
     - gem list
   script:
     - echo "Ruby SBOM Generation..."
