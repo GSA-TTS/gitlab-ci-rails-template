@@ -104,7 +104,7 @@ ruby-bom:
   extends: .setup-langs
   before_script:
     - !reference [.setup-langs, script]
-    - sudo gem install cyclonedx-ruby
+    - gem install cyclonedx-ruby
     - gem environment
     - gem list
   script:
