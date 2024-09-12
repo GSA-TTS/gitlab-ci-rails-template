@@ -70,7 +70,6 @@ bundle-audit:
   before_script:
     - !reference [.setup-langs, script]
   script:
-    - bundle update
     - echo "Bundle audit..."
     - bundle exec rake bundler:audit
 
