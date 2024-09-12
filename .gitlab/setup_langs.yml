@@ -8,7 +8,6 @@
   - echo 'yarn-offline-mirror-pruning true' >> .yarnrc
 
 .ruby-deps: &ruby-deps
-  - export PATH=$PATH:/usr/local/bundle/bin
   - bundle config set --local path 'vendor/ruby'
   - bundle install -j $(nproc)
 
