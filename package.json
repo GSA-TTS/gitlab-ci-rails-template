@@ -7,18 +7,18 @@
     "build:css": "postcss ./app/assets/stylesheets/application.postcss.scss -o ./app/assets/builds/application.css"
   },
   "dependencies": {
-    "pa11y-ci": "^3.1.0",
-    "webpack": "^5.93.0",
-    "webpack-cli": "^5.1.4",
     "@csstools/postcss-sass": "^5.1.1",
     "@csstools/sass-import-resolve": "https://github.com/rahearn/sass-import-resolve",
     "@uswds/uswds": "^3.8.1",
     "autoprefixer": "^10.4.19",
+    "pa11y-ci": "^3.1.0",
     "postcss": "^8.4.40",
     "postcss-cli": "^11.0.0",
     "postcss-import": "^16.1.0",
     "postcss-minify": "^1.1.0",
-    "postcss-scss": "^4.0.9"
+    "postcss-scss": "^4.0.9",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4"
   },
   "resolutions": {
     "@csstools/postcss-sass/@csstools/sass-import-resolve": "https://github.com/rahearn/sass-import-resolve",
