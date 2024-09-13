@@ -17,7 +17,6 @@
   - PUPPETEER_SKIP_DOWNLOAD=true yarn install --frozen-lockfile --no-progress --ignore-engines
 
 .node-deps-puppet: &node-deps-puppet
-  - *setup-node
   - yarn install --frozen-lockfile --no-progress --ignore-engines
 
 .setup-langs:
