@@ -68,7 +68,7 @@ test-run-server:
 bundle-audit:
   stage: test
   tags:
-    -tf
+    - tf
   extends: .setup-langs
   before_script:
     - !reference [.setup-langs, script]
@@ -79,7 +79,7 @@ bundle-audit:
 yarn-audit:
   stage: test
   tags:
-    -tf
+    - tf
   extends: .setup-langs
   before_script:
     - !reference [.setup-langs, script]
