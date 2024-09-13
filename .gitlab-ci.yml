@@ -34,7 +34,7 @@ default:
 install-deps:
   stage: build
   tags:
-    -tf
+    - tf
   inherit:
     default:
       - image
@@ -46,14 +46,14 @@ install-deps:
 build-project:
   stage: build
   tags:
-    -tf
+    - tf
   needs: ["install-deps"]
   extends: .init-project-build
 
 test-run-server:
   stage: test
   tags:
-    -tf
+    - tf
   extends: .run-server
   script:
     - RESULT=$(curl http://localhost:8080)
@@ -90,7 +90,7 @@ yarn-audit:
 ruby-bom:
   stage: test
   tags:
-    -tf 
+    - tf 
   extends: .setup-langs
   before_script:
     - !reference [.setup-langs, script]
@@ -118,7 +118,7 @@ ruby-bom:
 rspec:
   stage: test
   tags:
-    -tf
+    - tf
   extends: .setup-project
   script:
     - echo "Rspec..."
