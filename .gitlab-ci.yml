@@ -103,10 +103,12 @@ ruby-bom:
   script:
     - echo "Pa11y Scan..."
     - echo "Scan Complete"
-.rspec:
+rspec:
   stage: test
+  extends: .setup-project
   script:
     - echo "Rspec..."
+    - bundle exec rspec
     - echo "Rspec Complete"
 
 .deploy-staging:
