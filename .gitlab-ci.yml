@@ -59,7 +59,7 @@ test-run-server:
     - echo "Brakeman scan..."
     - echo "Scan complete."
 
-bundle-audit:
+.bundle-audit:
   stage: test
   extends: .setup-langs
   before_script:
@@ -68,7 +68,7 @@ bundle-audit:
     - echo "Bundle audit..."
     - bundle exec rake bundler:audit
 
-yarn-audit:
+.yarn-audit:
   stage: test
   extends: .setup-langs
   before_script:
@@ -77,7 +77,7 @@ yarn-audit:
     - echo "Yarn audit..."
     - bundle exec rake yarn:audit
 
-ruby-bom:
+.ruby-bom:
   stage: test
   extends: .setup-langs
   before_script:
