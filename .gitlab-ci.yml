@@ -120,6 +120,8 @@ rspec:
   tags:
     - tf
   extends: .setup-project
+  before_script: 
+    - !reference [.setup-script]
   script:
     - echo "Rspec..."
     - bundle exec rspec
