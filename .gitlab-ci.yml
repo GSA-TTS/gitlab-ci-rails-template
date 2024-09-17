@@ -23,6 +23,7 @@ variables:
   PACKAGE_MANAGER_SET: bundler,npm
   SETTINGS__GITLAB_ACCESS_TOKEN: $DEPENDABOT_KEY
   DIRECTORY: /
+  a11y_urls: "https://localhost:8080"
 
 include:
   - local: ".gitlab/caches.yml"
@@ -30,6 +31,7 @@ include:
   - local: ".gitlab/setup_project.yml"
   - local: ".gitlab/run_server.yml"
   - remote: "https://gitlab.com/dependabot-gitlab/dependabot-standalone/-/raw/3.24.0/.gitlab-ci.yml"
+  - template: "Verify/Accessibility.gitlab-ci.yml"
 
 default:
   image: ruby:3.3.4
@@ -122,13 +124,22 @@ ruby-bom:
     - echo "OWASP ZAP Scan..."
     - echo "Scan Complete"
 
-pa11y-scan:
+.pa11y-scan:
   stage: test
   extends: .run-server
   script:
     - !reference [.node-deps-puppet]
     - set -o pipefail
     - yarn run pa11y-ci -c pa11yci.js 2>&1 | tee pa11y_output.txt
+
+a11y:
+  stage: test
+  extends: .run-server
+  before_script:
+    - apt-get install -y gpg
+    - gpg --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+    - curl -sSL https://get.rvm.io | bash -s stable --ruby
+    - !reference [.run-server, before_script]
 
 .rspec:
   stage: test
