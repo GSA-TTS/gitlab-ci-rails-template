@@ -121,7 +121,7 @@ rspec:
     - tf
   extends: .setup-project
   variables:
-  CI_DEBUG_SERVICES: "true"
+    CI_DEBUG_SERVICES: "true"
   before_script: 
     - echo "Setup project..."
     - !reference [.setup-script]
