@@ -124,22 +124,20 @@ ruby-bom:
     - echo "OWASP ZAP Scan..."
     - echo "Scan Complete"
 
-.pa11y-scan:
+pa11y-scan:
   stage: test
   extends: .run-server
   script:
     - !reference [.node-deps-puppet]
     - set -o pipefail
     - yarn run pa11y-ci -c pa11yci.js 2>&1 | tee pa11y_output.txt
-
-a11y:
-  stage: test
-  extends: .run-server
-  before_script:
-    - apt-get install -y gpg
-    - gpg --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-    - curl -sSL https://get.rvm.io | bash -s stable --ruby
-    - !reference [.run-server, before_script]
+  artifacts:
+    when: always
+    expose_as: "Accessibility Reports"
+    paths:
+      - pa11y_output.txt
+    reports:
+      accessibility: pa11y_output.txt
 
 .rspec:
   stage: test
