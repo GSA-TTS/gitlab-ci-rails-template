@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%= I18n.locale %>">
   <head>
-    <title></title>
+    <title>Rtci</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -20,7 +20,6 @@
     <%= render "application/header" %>
     <main id="main-content">
       <div class="grid-container usa-section">
-        <p style="color: #111; background: #000">This paragraph should fail an a11y test.</p>
         <%= yield %>
       </div>
     </main>

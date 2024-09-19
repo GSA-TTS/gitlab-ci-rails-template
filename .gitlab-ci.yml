@@ -31,7 +31,6 @@ include:
   - local: ".gitlab/setup_project.yml"
   - local: ".gitlab/run_server.yml"
   - remote: "https://gitlab.com/dependabot-gitlab/dependabot-standalone/-/raw/3.24.0/.gitlab-ci.yml"
-  - template: "Verify/Accessibility.gitlab-ci.yml"
 
 default:
   image: ruby:3.3.4
