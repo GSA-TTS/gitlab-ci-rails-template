@@ -136,8 +136,6 @@ pa11y-scan:
     expose_as: "Accessibility Reports"
     paths:
       - pa11y_output.txt
-    reports:
-      accessibility: pa11y_output.txt
 
 .rspec:
   stage: test
