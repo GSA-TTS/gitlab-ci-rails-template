@@ -33,8 +33,6 @@ default:
 
 install-deps:
   stage: build
-  tags:
-    - tf
   inherit:
     default:
       - image
@@ -45,15 +43,11 @@ install-deps:
 
 build-project:
   stage: build
-  tags:
-    - tf
   needs: ["install-deps"]
   extends: .init-project-build
 
 test-run-server:
   stage: test
-  tags:
-    - tf
   extends: .run-server
   script:
     - RESULT=$(curl http://localhost:8080)
@@ -67,8 +61,6 @@ test-run-server:
 
 bundle-audit:
   stage: test
-  tags:
-    - tf
   extends: .setup-langs
   before_script:
     - !reference [.setup-langs, script]
@@ -78,8 +70,6 @@ bundle-audit:
 
 yarn-audit:
   stage: test
-  tags:
-    - tf
   extends: .setup-langs
   before_script:
     - !reference [.setup-langs, script]
@@ -89,8 +79,6 @@ yarn-audit:
 
 ruby-bom:
   stage: test
-  tags:
-    - tf 
   extends: .setup-langs
   before_script:
     - !reference [.setup-langs, script]
@@ -117,11 +105,8 @@ ruby-bom:
     - echo "Scan Complete"
 rspec:
   stage: test
-  tags:
-    - tf
   extends: .setup-project
   variables:
-    CI_DEBUG_SERVICES: "true"
   before_script: 
     - echo "Setup project..."
     - !reference [.setup-script]
