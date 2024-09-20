@@ -53,11 +53,14 @@ test-run-server:
     - RESULT=$(curl http://localhost:8080)
     - echo "$RESULT" | grep -q "<title>Rtci</title>"
 
-.brakeman-scan:
+brakeman-scan:
   stage: test
+  extends: .setup-langs
   script:
-    - echo "Brakeman scan..."
-    - echo "Scan complete."
+    - bundle exec brakeman -f sarif -o output.sarif.json .
+  artifacts:
+    when: always
+    path: output.sarif.json
 
 bundle-audit:
   stage: test
