@@ -7,7 +7,7 @@ include:
     alias: pg
 
 .setup-script: &setup-script
-  - !reference [.setup-langs, script]
+  - !reference [.setup-langs, before_script]
   - export DATABASE_URL="postgres://postgres:${POSTGRES_PASSWORD}@${CI_SERVICE_pg}:5432/${POSTGRES_DB}"
   - bin/rails db:create
   - bundle exec rake assets:precompile

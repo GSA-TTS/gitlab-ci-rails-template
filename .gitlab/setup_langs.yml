@@ -21,12 +21,12 @@
   - yarn install --frozen-lockfile --no-progress --ignore-engines
 
 .setup-langs:
-  script:
+  before_script:
     - *ruby-deps
     - *node-deps
 
 # Only used by Pa11y for now
 .setup-langs-with-puppet:
-  script:
+  before_script:
     - *ruby-deps
     - *node-deps-puppet
