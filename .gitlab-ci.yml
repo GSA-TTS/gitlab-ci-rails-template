@@ -70,11 +70,15 @@ test-run-server:
   rules:
     - if: $CI_PIPELINE_SOURCE != "schedule"
 
-.brakeman-scan:
+brakeman-scan:
   stage: test
+  extends: .setup-langs
   script:
-    - echo "Brakeman scan..."
-    - echo "Scan complete."
+    - bundle exec brakeman -f sarif -o output.sarif.json .
+  artifacts:
+    when: always
+    paths:
+      - output.sarif.json
 
 bundle-audit:
   stage: test
