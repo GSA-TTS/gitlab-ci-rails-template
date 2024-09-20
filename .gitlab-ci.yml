@@ -19,12 +19,18 @@ variables:
   POSTGRES_DB: rtci_test
   POSTGRES_PASSWORD: testpass123
   CACHE_FALLBACK_KEY: main
+  PACKAGE_MANAGER_SET: bundler,npm
 
 include:
   - local: ".gitlab/caches.yml"
   - local: ".gitlab/setup_langs.yml"
   - local: ".gitlab/setup_project.yml"
   - local: ".gitlab/run_server.yml"
+  - remote: "https://gitlab.com/dependabot-gitlab/dependabot-standalone/.gitlab-ci.yml"
+    inputs:
+      gitlab_access_token: $CI_JOB_TOKEN
+    rules:
+      - if: $PACKAGE_MANAGER_SET
 
 default:
   image: ruby:3.3.4
