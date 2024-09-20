@@ -35,6 +35,8 @@ default:
     - !reference [.cache-pull]
 
 .dependabot-gitlab:
+  image:
+    entrypoint: ["sh"]
   stage: dependabot
 
 install-deps:
