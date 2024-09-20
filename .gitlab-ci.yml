@@ -11,6 +11,7 @@
 stages:
   - build
   - test
+  - dependabot
   - deploy
 
 variables:
@@ -31,6 +32,9 @@ include:
       gitlab_access_token: $CI_JOB_TOKEN
     rules:
       - if: $PACKAGE_MANAGER_SET
+
+.dependabot-gitlab:
+  stage: dependabot
 
 default:
   tags:
@@ -86,7 +90,7 @@ yarn-audit:
     - bundle exec rake yarn:audit
 
 ruby-bom:
-  stage: test 
+  stage: test
   extends: .setup-langs
   before_script:
     - !reference [.setup-langs, script]
@@ -98,7 +102,7 @@ ruby-bom:
     when: always
     paths:
       - ./ruby_bom.xml
-    
+
 .owasp-scan:
   stage: test
   #TODO: check gitlab security templates for this scan
