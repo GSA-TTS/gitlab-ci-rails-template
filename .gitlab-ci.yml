@@ -33,6 +33,8 @@ default:
   image: ruby:3.3.4
   cache:
     - !reference [.cache-pull]
+  tags:
+    - zjr
 
 .dependabot-gitlab:
   image:
@@ -44,6 +46,7 @@ install-deps:
   inherit:
     default:
       - image
+      - tags
   cache:
     - !reference [.cache-ruby-pull-push]
     - !reference [.cache-yarn-pull-push]
