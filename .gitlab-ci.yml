@@ -33,6 +33,8 @@ include:
       - if: $PACKAGE_MANAGER_SET
 
 default:
+  tags:
+    - zjr
   image: ruby:3.3.4
   cache:
     - !reference [.cache-pull]
