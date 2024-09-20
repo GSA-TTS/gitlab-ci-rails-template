@@ -11,6 +11,7 @@
 stages:
   - build
   - test
+  - dependabot
   - deploy
 
 variables:
@@ -26,16 +27,15 @@ include:
   - local: ".gitlab/setup_langs.yml"
   - local: ".gitlab/setup_project.yml"
   - local: ".gitlab/run_server.yml"
-  - remote: "https://gitlab.com/dependabot-gitlab/dependabot-standalone/.gitlab-ci.yml"
-    inputs:
-      gitlab_access_token: $CI_JOB_TOKEN
-    rules:
-      - if: $PACKAGE_MANAGER_SET
+  - remote: "https://gitlab.com/dependabot-gitlab/dependabot-standalone/-/raw/3.24.0/.gitlab-ci.yml"
 
 default:
   image: ruby:3.3.4
   cache:
     - !reference [.cache-pull]
+
+.dependabot-gitlab:
+  stage: dependabot
 
 install-deps:
   stage: build
@@ -84,7 +84,7 @@ yarn-audit:
     - bundle exec rake yarn:audit
 
 ruby-bom:
-  stage: test 
+  stage: test
   extends: .setup-langs
   before_script:
     - !reference [.setup-langs, script]
@@ -96,7 +96,7 @@ ruby-bom:
     when: always
     paths:
       - ./ruby_bom.xml
-    
+
 .owasp-scan:
   stage: test
   #TODO: check gitlab security templates for this scan
