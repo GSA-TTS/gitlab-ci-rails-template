@@ -21,6 +21,8 @@ variables:
   POSTGRES_PASSWORD: testpass123
   CACHE_FALLBACK_KEY: main
   PACKAGE_MANAGER_SET: bundler,npm
+  SETTINGS__GITLAB_ACCESS_TOKEN: $DEPENDABOT_KEY
+  DIRECTORY: /
 
 include:
   - local: ".gitlab/caches.yml"
@@ -33,8 +35,6 @@ default:
   image: ruby:3.3.4
   cache:
     - !reference [.cache-pull]
-  tags:
-    - zjr
 
 .dependabot-gitlab:
   image:
@@ -51,11 +51,15 @@ install-deps:
     - !reference [.cache-ruby-pull-push]
     - !reference [.cache-yarn-pull-push]
   extends: .setup-langs
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "schedule"
 
 build-project:
   stage: build
   needs: ["install-deps"]
   extends: .init-project-build
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "schedule"
 
 test-run-server:
   stage: test
@@ -63,6 +67,8 @@ test-run-server:
   script:
     - RESULT=$(curl http://localhost:8080)
     - echo "$RESULT" | grep -q "<title>Rtci</title>"
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "schedule"
 
 .brakeman-scan:
   stage: test
@@ -78,6 +84,8 @@ bundle-audit:
   script:
     - echo "Bundle audit..."
     - bundle exec rake bundler:audit
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "schedule"
 
 yarn-audit:
   stage: test
@@ -87,6 +95,8 @@ yarn-audit:
   script:
     - echo "Yarn audit..."
     - bundle exec rake yarn:audit
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "schedule"
 
 ruby-bom:
   stage: test
@@ -101,6 +111,8 @@ ruby-bom:
     when: always
     paths:
       - ./ruby_bom.xml
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "schedule"
 
 .owasp-scan:
   stage: test
