@@ -10,7 +10,7 @@
 .ruby-deps: &ruby-deps
   - export PATH=$PATH:/usr/local/bundle/bin
   - bundle config set --local path 'vendor/ruby'
-  - bundle install -j $(nproc)
+  - bundle install
 
 .node-deps: &node-deps
   - *setup-node
