@@ -106,7 +106,6 @@ ruby-bom:
 rspec:
   stage: test
   extends: .setup-project
-  variables:
   before_script: 
     - echo "Setup project..."
     - !reference [.setup-script]
