@@ -23,6 +23,7 @@ variables:
   PACKAGE_MANAGER_SET: bundler,npm
   SETTINGS__GITLAB_ACCESS_TOKEN: $DEPENDABOT_KEY
   DIRECTORY: /
+  a11y_urls: "https://localhost:8080"
 
 include:
   - local: ".gitlab/caches.yml"
@@ -121,11 +122,20 @@ ruby-bom:
   script:
     - echo "OWASP ZAP Scan..."
     - echo "Scan Complete"
-.pa11y-scan:
+
+pa11y-scan:
   stage: test
+  extends: .run-server
   script:
-    - echo "Pa11y Scan..."
-    - echo "Scan Complete"
+    - !reference [.node-deps-puppet]
+    - set -o pipefail
+    - yarn run pa11y-ci -c pa11yci.js 2>&1 | tee pa11y_output.txt
+  artifacts:
+    when: always
+    expose_as: "Accessibility Reports"
+    paths:
+      - pa11y_output.txt
+
 .rspec:
   stage: test
   script:

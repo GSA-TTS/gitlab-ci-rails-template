@@ -7,6 +7,6 @@ module.exports = {
     ]
   },
   urls: [
-    "http://localhost:3000"
+    "http://localhost:8080"
   ]
 };
