@@ -51,7 +51,8 @@ install-deps:
   cache:
     - !reference [.cache-ruby-pull-push]
     - !reference [.cache-yarn-pull-push]
-  extends: .setup-langs
+  script:
+    - !reference [.setup-langs, before_script]
   rules:
     - if: $CI_PIPELINE_SOURCE != "schedule"
 
@@ -71,17 +72,19 @@ test-run-server:
   rules:
     - if: $CI_PIPELINE_SOURCE != "schedule"
 
-.brakeman-scan:
+brakeman-scan:
   stage: test
+  extends: .setup-langs
   script:
-    - echo "Brakeman scan..."
-    - echo "Scan complete."
+    - bundle exec brakeman -f sarif -o output.sarif.json .
+  artifacts:
+    when: always
+    paths:
+      - output.sarif.json
 
 bundle-audit:
   stage: test
   extends: .setup-langs
-  before_script:
-    - !reference [.setup-langs, script]
   script:
     - echo "Bundle audit..."
     - bundle exec rake bundler:audit
@@ -91,8 +94,6 @@ bundle-audit:
 yarn-audit:
   stage: test
   extends: .setup-langs
-  before_script:
-    - !reference [.setup-langs, script]
   script:
     - echo "Yarn audit..."
     - bundle exec rake yarn:audit
@@ -103,7 +104,7 @@ ruby-bom:
   stage: test
   extends: .setup-langs
   before_script:
-    - !reference [.setup-langs, script]
+    - !reference [.setup-langs, before_script]
     - gem install cyclonedx-ruby
   script:
     - echo "Ruby SBOM Generation..."
