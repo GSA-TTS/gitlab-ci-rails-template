@@ -24,6 +24,9 @@ variables:
   SETTINGS__GITLAB_ACCESS_TOKEN: $DEPENDABOT_KEY
   DIRECTORY: /
   a11y_urls: "https://localhost:8080"
+  CI_DEBUG_TRACE: true
+  PRESERVE_WORKER: true
+  CUSTOM_ENV_PRESERVE_WORKER: true
 
 include:
   - local: ".gitlab/caches.yml"
