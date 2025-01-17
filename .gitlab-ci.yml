@@ -52,6 +52,7 @@ install-deps:
     - !reference [.cache-ruby-pull-push]
     - !reference [.cache-yarn-pull-push]
   script:
+    - env
     - !reference [.setup-langs, before_script]
   rules:
     - if: $CI_PIPELINE_SOURCE != "schedule"
